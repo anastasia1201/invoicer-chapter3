@@ -50,8 +50,10 @@ jobs:
             )
 
       - run:
-          name: Test dependencies are up to date
-          command: 'GOPATH="${GOPATH_HEAD}"; ( cd ${GOPATH_BASE}/invoicer-chapter3 && govend -u --prune && git diff --quiet )'
+          name: Testing application
+          command: |
+              go test \
+              github.com/anastasia1201/invoicer-chapter3
 
       - deploy:
           # Push application container to dockerhub
