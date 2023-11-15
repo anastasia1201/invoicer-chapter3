@@ -47,9 +47,9 @@ jobs:
           command: |
             (
             docker pull owasp/zap2docker-weekly && \
-            docker run /
+            docker run \
                 --network secdevops-net \
-                -t owasp/zap2docker-weekly:latest zap-baseline.py \
+                -t owasp/zap2docker-weekly zap-baseline.py \
                 -u https://raw.githubusercontent.com/anastasia1201/invoicer-chapter3/master/zap-baseline.conf \
                 -t http://invoicer:8080/ || \
             exit 0
