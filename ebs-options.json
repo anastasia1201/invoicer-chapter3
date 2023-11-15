@@ -5,6 +5,11 @@
         "Value": "yes"
     },
     {
+	    "Namespace": "aws:autoscaling:launchconfiguration",
+	    "OptionName": "IamInstanceProfile",
+	    "Value": "aws-elasticbeanstalk-ec2-role"
+    },
+    {
         "Namespace": "aws:elasticbeanstalk:application:environment", 
         "OptionName": "INVOICER_POSTGRES_USER", 
         "Value": "invoicer"
