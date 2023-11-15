@@ -51,7 +51,7 @@ jobs:
                 --network secdevops-net \
                 -t owasp/zap2docker-weekly zap-baseline.py \
                 -u https://raw.githubusercontent.com/anastasia1201/invoicer-chapter3/master/zap-baseline.conf \
-                -t http://invoicer:8080/ || \
+                -t http://anastasia-invoicer-invoicer-api.eba-c3vkaagf.us-east-1.elasticbeanstalk.com/ || \
             exit 0
             )
 
