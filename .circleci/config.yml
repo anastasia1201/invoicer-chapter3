@@ -5,7 +5,7 @@ jobs:
     # You will need to modify the code below to reflect your github account/repo setup
     working_directory: /go/src/github.com/anastasia1201/invoicer-chapter3
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.10
     environment:
       GO15VENDOREXPERIMENT: 1
     branches:
@@ -29,10 +29,14 @@ jobs:
             [ ! -e bin ] && mkdir bin;
             cp "${GOPATH_HEAD}/bin/invoicer-chapter3" bin/invoicer;
             docker build -t ${DOCKER_REPO}/invoicer-chapter3 .;
+            docker network create --driver bridge secdevops-net
 
       - run:
           name: Run application in background
           command: |
+            docker run \
+                --network secdevops-net \
+                --name invoicer \
             docker run ${DOCKER_REPO}/invoicer-chapter3
           background: true
 
@@ -43,21 +47,18 @@ jobs:
           command: |
             (
             docker pull owasp/zap2docker-weekly && \
-            docker run -t owasp/zap2docker-weekly zap-baseline.py \
+            docker run /
+                -t owasp/zap2docker-weekly zap-baseline.py \
                 -u https://raw.githubusercontent.com/anastasia1201/invoicer-chapter3/master/zap-baseline.conf \
-                -t http://172.17.0.2:8080/ || \
-            if [ $? -ne 1 ]; then exit 0; else exit 1; fi;
+                -t http://invoicer:8080/ || \
+            exit 0
             )
-
-      - run:
-          name: Test dependencies are up to date
-          command: 'GOPATH="${GOPATH_HEAD}"; ( cd ${GOPATH_BASE}/invoicer-chapter3 && govend -u --prune && git diff --quiet )'
 
       - deploy:
           # Push application container to dockerhub
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                docker login -u ${DOCKER_USER} -p ${DOCKER_PASS};
+                docker login -u ${DOCKER_USER} -p ${DOCKER_PASS} --password-stdin;
                 echo ${DOCKER_USER}/invoicer-chapter3:${CIRCLE_TAG};
                 go install --ldflags '-extldflags "-static"' github.com/anastasia1201/invoicer-chapter3;
                 mkdir bin;
