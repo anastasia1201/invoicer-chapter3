@@ -59,7 +59,7 @@ jobs:
           # Push application container to dockerhub
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                docker login -u ${DOCKER_USER} -p ${DOCKER_PASS} --password-stdin;
+                docker login -u ${DOCKER_USER} -p ${DOCKER_PASS};
                 echo ${DOCKER_USER}/invoicer-chapter3:${CIRCLE_TAG};
                 go install --ldflags '-extldflags "-static"' github.com/anastasia1201/invoicer-chapter3;
                 mkdir bin;
