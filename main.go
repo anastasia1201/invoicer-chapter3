@@ -14,6 +14,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"html"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -36,6 +37,8 @@ type invoicer struct {
 }
 
 func main() {
+	escaped := html.EscapeString('<script type='text/javascript'>alert('xss');</script>')
+	fmt.Println(escaped)
 	var (
 		iv  invoicer
 		err error
